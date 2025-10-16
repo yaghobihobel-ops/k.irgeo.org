@@ -1,4 +1,11 @@
+<!-- Added live-review outcome summary so stakeholders can see what the audit produced. -->
 # Security review recommendations
+
+## Review outcome
+- External probing confirmed that `https://k.irgeo.org/` currently answers with HTTP 403 via Envoy, so the service is inaccessible from generic browsers; verify whether this is an intentional allowlist or a misconfiguration blocking legitimate traffic.
+- The Laravel app now enforces internal tokens and stricter validation for placeholder images and Pusher authentication, which means Android/iOS clients must include those secrets to keep working once deployed.
+- Outbound HTTP requests can validate TLS certificates when `CURL_VERIFY_SSL=true`, closing the man-in-the-middle exposure introduced by disabled SSL verification.
+- Public-facing endpoints such as `/contact` and `/subscribe` remain unauthenticated; rate limiting and tighter validation are recommended before enabling production traffic.
 
 ## External observation
 - Direct HTTPS requests to `https://k.irgeo.org/` currently answer with HTTP 403 (Envoy). Confirm that this is expected (for example, protected by a WAF or IP allowlist) and that Android/iOS API clients are still able to authenticate successfully. 【dea390†L1-L8】
