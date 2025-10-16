@@ -177,31 +177,69 @@ class SiteController extends Controller
 
     public function placeholderImage($size = null)
     {
-        $imgWidth  = explode('x', $size)[0];
-        $imgHeight = explode('x', $size)[1];
-        $text      = $imgWidth . '×' . $imgHeight;
-        $fontFile  = realpath('assets/font/solaimanLipi_bold.ttf');
-        $fontSize  = round(($imgWidth - 50) / 8);
-        if ($fontSize <= 9) {
-            $fontSize = 9;
+        if (!$size || !preg_match('/^(\\d{1,4})x(\\d{1,4})$/', $size, $matches)) {
+            abort(400, 'Invalid image size format.');
         }
+
+        $config = config('security.placeholder_image');
+        $imgWidth = (int) $matches[1];
+        $imgHeight = (int) $matches[2];
+        $maxDimension = (int) ($config['max_dimension'] ?? 2000);
+        $maxPixels = (int) ($config['max_pixels'] ?? 4000000);
+        $minDimension = (int) ($config['min_dimension'] ?? 16);
+
+        if ($imgWidth < $minDimension || $imgHeight < $minDimension) {
+            abort(422, 'Image dimensions are too small.');
+        }
+
+        if ($imgWidth > $maxDimension || $imgHeight > $maxDimension || ($imgWidth * $imgHeight) > $maxPixels) {
+            abort(422, 'Requested image dimensions are not allowed.');
+        }
+
+        if (!extension_loaded('gd')) {
+            abort(500, 'GD extension is not available.');
+        }
+
+        $fontFile = realpath('assets/font/solaimanLipi_bold.ttf');
+        if (!$fontFile) {
+            abort(500, 'Placeholder font is not configured.');
+        }
+
+        $fontSize = max(9, (int) round(($imgWidth - 50) / 8));
         if ($imgHeight < 100 && $fontSize > 30) {
             $fontSize = 30;
         }
 
-        $image     = imagecreatetruecolor($imgWidth, $imgHeight);
+        $image = imagecreatetruecolor($imgWidth, $imgHeight);
+        if (!$image) {
+            abort(500, 'Unable to create image resource.');
+        }
+
         $colorFill = imagecolorallocate($image, 100, 100, 100);
-        $bgFill    = imagecolorallocate($image, 255, 255, 255);
+        $bgFill = imagecolorallocate($image, 255, 255, 255);
         imagefill($image, 0, 0, $bgFill);
-        $textBox    = imagettfbbox($fontSize, 0, $fontFile, $text);
-        $textWidth  = abs($textBox[4] - $textBox[0]);
+
+        $text = $imgWidth . '×' . $imgHeight;
+        $textBox = imagettfbbox($fontSize, 0, $fontFile, $text);
+        if ($textBox === false) {
+            abort(500, 'Unable to calculate text bounding box.');
+        }
+        $textWidth = abs($textBox[4] - $textBox[0]);
         $textHeight = abs($textBox[5] - $textBox[1]);
-        $textX      = ($imgWidth - $textWidth) / 2;
-        $textY      = ($imgHeight + $textHeight) / 2;
-        header('Content-Type: image/jpeg');
-        imagettftext($image, $fontSize, 0, $textX, $textY, $colorFill, $fontFile, $text);
-        imagejpeg($image);
+        $textX = (int) (($imgWidth - $textWidth) / 2);
+        $textY = (int) (($imgHeight + $textHeight) / 2);
+
+        ob_start();
+        $textDrawn = imagettftext($image, $fontSize, 0, $textX, $textY, $colorFill, $fontFile, $text);
+        $imageCreated = imagejpeg($image);
+        $imageData = ob_get_clean();
         imagedestroy($image);
+
+        if ($textDrawn === false || $imageCreated === false || $imageData === false) {
+            abort(500, 'Failed to render placeholder image.');
+        }
+
+        return response($imageData, 200, ['Content-Type' => 'image/jpeg']);
     }
 
     public function maintenance()
@@ -220,15 +258,56 @@ class SiteController extends Controller
     }
 
 
-    public function pusherAuthentication($socketId, $channelName)
+    public function pusherAuthentication(Request $request, $socketId, $channelName)
     {
-        $general      = gs();
-        $pusherSecret = $general->pusher_config->app_secret;
-        $str          = $socketId . ":" . $channelName;
-        $hash         = hash_hmac('sha256', $str, $pusherSecret);
+        [$user, $guard] = $this->resolveBroadcastUser();
+
+        abort_if(!$user, 401, 'Authentication required.');
+
+        $prefixes = [
+            'web' => 'private-App.Models.User.',
+            'agent' => 'private-App.Models.Agent.',
+            'merchant' => 'private-App.Models.Merchant.',
+            'admin' => 'private-App.Models.Admin.',
+        ];
+
+        $prefix = $prefixes[$guard] ?? null;
+
+        if (!$prefix || !str_starts_with($channelName, $prefix)) {
+            abort(403, 'Unauthorized channel.');
+        }
+
+        $channelUserId = (int) substr($channelName, strlen($prefix));
+
+        if ($channelUserId !== (int) $user->id) {
+            abort(403, 'Channel access denied.');
+        }
+
+        $general = gs();
+        $pusherConfig = $general->pusher_config ?? null;
+
+        if (!$pusherConfig || empty($pusherConfig->app_secret) || empty($pusherConfig->app_key)) {
+            abort(503, 'Pusher configuration is unavailable.');
+        }
+
+        $payload = $socketId . ':' . $channelName;
+        $hash = hash_hmac('sha256', $payload, $pusherConfig->app_secret);
 
         return response()->json([
-            'auth' => $general->pusher_config->app_key . ":" . $hash,
+            'auth' => $pusherConfig->app_key . ':' . $hash,
         ]);
+    }
+
+    private function resolveBroadcastUser(): array
+    {
+        foreach (['web', 'agent', 'merchant', 'admin'] as $guard) {
+            $user = auth()->guard($guard)->user();
+
+            if ($user) {
+                return [$user, $guard];
+            }
+        }
+
+        return [null, null];
     }
 }

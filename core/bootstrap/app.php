@@ -32,6 +32,7 @@ use App\Http\Middleware\RedirectIfNotAgent;
 use App\Http\Middleware\RedirectIfNotMerchant;
 use App\Http\Middleware\TokenPermission;
 use App\Http\Middleware\VerifyCsrfToken;
+use App\Http\Middleware\VerifyInternalToken;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -118,6 +119,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'mobile_verified'  => MobileNumberVerification::class,
             'token.permission' => TokenPermission::class,
             'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
+            'internal.token' => VerifyInternalToken::class,
         ]);
         $middleware->validateCsrfTokens(
             except: ['user/deposit', 'ipn*','pusher*']
