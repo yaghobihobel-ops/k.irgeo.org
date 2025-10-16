@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "ovopay-app",
+  "private_key_id": "d2e270fed3079c3e7c74b0252c2bba0ffb593380",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQDTAZck2FKdWfwA\n7cwz2jHJpQtfnJRQC1XBGqZ84AR56NuGi8s/TrJZAkc5rU80kxqq1K2UH5XCvXmV\n/rlxKDjR9r521v3HsEmWbsQP1AHzQ6GPtS3RdsxftCWUcBhmJw/wTjloaqnUwH0y\n97fFGS5mWgSEOirzlM9rDBO39Q7Tsi/yVXgsVJkYFCesSGHP+QKXuMBj2HWOCEHT\n/KJJ1xVfTvRI1DeXSpFdZyQ7nne9t0P+7hdPDiZgB8Z1hYlVeykhaQU2zffE5XUL\n8JdkDcXrSZ7ibXjM5UQiZb7PDh/CWLJ1hIczJj2y+b97lNXaOvFhxb9MjFs1ckSQ\nzyIsyzDrAgMBAAECggEAQ/L4qcBRxmMyYFgzkKUcsFtKUNVa+3XS/TboU0FOn7WJ\ncAf3gSEGFNzDdALoBT2z8jw/03niX85lZ5SaQiLaPV8QkbOFEPenkt6Dm7dBk4V9\ncwo8wX3YrZ8VFPqOGONOYivGl+X1X9JG3xFfqASGaSZm2u/iYgNTUh0XAn/TcP8U\ndmOckHm57OTnyZH5kyJ1NmvMI0ZONGRIM5P2CGnhUvIAKnaUCSf6tvJINiktkUIS\nti5BV/HKwtB1YIzlfmNuQOfKvSFGYVTWW+dTxOMd8md4VbQOH3+agzfpSkW7FX4Z\n1O3BrTVl8pAv7+cypDwoH2gqikq4usLflkOX4xmr+QKBgQDrno2lOZ0lxMnwV7Ry\nTuGVnc+3eDKaMr1z7NIcnYXjSbc0/Tt/ZH368ciz3nnu/HsNqWNeI1lwVtzaANAL\nRbO0yb9aq5G8ra/fyNg/sN8PwfVkDoqiTki8+4OolrV6qios0fWzwZhez8OSm7ry\nip8WObQ3ePRxXkv1qhZrzKa4AwKBgQDlQgPeX6XHMpO48OIi+68iAF6UvMWQsw3C\nJQDiWtJx+D7+9F88JBKx9ObJfZR5ZI82gcfjnh2RPm81MzihbGx9L/EwjWHT9xeZ\n5iCsgtba6+czkNHsrg491vJVwWLPyi1Brfh1s9UMW5VLJ/mjUcIfS/Ijc0oMyybW\ndCBLseYS+QKBgGTPSbtPkzT9pYj3fXUK2umww5a0DrJ60yQuRxeHLim4+HHrhvFS\nhbRAjqamoXTnAZ8uwh0c8r9l6sg7YMfx4pmPWBfrIEeh6IXO4PcfLdEII33T2uzm\noah51DLliHAbLkBO9NkcE509N2gayTnMpZRUzA6P6cY3mjhZtY4Z2ZsRAoGASqIG\nDmOG3WU6r+9DPu4+YkxKfhNCIcwYg4Z2VjoI3m9ZWriFNFft+h7m7ttB9Y7mDHGN\neC0mJP11SJVnLy3T16E+3HZ6TX3YIhLHukFR3q0DdEcGAA3dtwX9mCs/lrOTrhkL\nlI25oq9B19iorSFVl8iqiB3lEmskNpZRWTMN2kkCgYA+nhpiDs07kQnau4N9uwlx\nHuwZebN+ZSP+XOeiCJ7T1uoE6uOB9HbUYAI7bR1Mhfeqzqn8u/C9Xr8xEaoM2BIC\npo5TJROT4Z6o5S5lMaM/mqywnvc+25+/T/E8cpAf/jEc7Iso7bL63oemDYhv3srn\nmAZPiFcdrIRrTMKq+Gz0SA==\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-upryi@ovopay-app.iam.gserviceaccount.com",
+  "client_id": "117023882865163548196",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-upryi%40ovopay-app.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

@@ -1,0 +1,1 @@
+var firebaseConfig = {"apiKey":"AIzaSyDsfMnr_yX4o8dn31xVJjoPHPyDL2-GF34","authDomain":"irgeo-4d617.firebaseapp.com","projectId":"irgeo-4d617","storageBucket":"irgeo-4d617.firebasestorage.app","messagingSenderId":"641894425056","appId":"1:641894425056:web:6d943b626b83a4e63e8b85","measurementId":"G-T14H9RHVP8"}
