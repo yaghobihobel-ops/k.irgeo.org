@@ -1,13 +1,16 @@
 <?php
 
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/clear', function () {
-    \Illuminate\Support\Facades\Artisan::call('optimize:clear');
+Route::middleware(['internal.token:maintenance', 'throttle:2,1'])->get('/clear', function () {
+    Artisan::call('optimize:clear');
+
+    return response()->json(['status' => 'ok']);
 });
 
 Route::get('app/deposit/confirm/{hash}', 'Gateway\PaymentController@appDepositConfirm')->name('deposit.app.confirm');
-Route::get('cron', 'CronController@cron')->name('cron');
+Route::middleware(['internal.token:cron', 'throttle:5,1'])->get('cron', 'CronController@cron')->name('cron');
 
 
 Route::controller('TicketController')->prefix('ticket')->name('ticket.')->group(function () {
@@ -26,7 +29,7 @@ Route::controller('SiteController')->group(function () {
     Route::get('/contact', 'contact')->name('contact');
     Route::post('/contact', 'contactSubmit');
     Route::get('/change/{lang?}', 'changeLanguage')->name('lang');
-    Route::post('pusher/auth/{socketId}/{channelName}', 'pusherAuthentication');
+    Route::post('pusher/auth/{socketId}/{channelName}', 'pusherAuthentication')->middleware('throttle:60,1');
     Route::get('cookie-policy', 'cookiePolicy')->name('cookie.policy');
 
     Route::get('/cookie/accept', 'cookieAccept')->name('cookie.accept');

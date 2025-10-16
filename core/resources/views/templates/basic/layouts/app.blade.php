@@ -1,5 +1,6 @@
 <!doctype html>
-<html lang="{{ config('app.locale') }}" itemscope itemtype="http://schema.org/WebPage">
+{{-- Enable locale-aware direction for the root document --}}
+<html lang="{{ config('app.locale') }}" dir="{{ app()->getLocale() === 'fa' ? 'rtl' : 'ltr' }}" itemscope itemtype="http://schema.org/WebPage">
 
 <head>
     <!-- Required meta tags -->
@@ -17,6 +18,22 @@
 
     <link rel="stylesheet" href="{{ asset($activeTemplateTrue . 'css/custom.css') }}">
     <link rel="stylesheet" href="{{ asset($activeTemplateTrue . 'css/main.css') }}">
+
+    {{-- Load Vazir font and typography adjustments for Persian locale --}}
+    @if (app()->getLocale() === 'fa')
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Vazir:wght@300;400;500;700&display=swap" rel="stylesheet">
+        <style>
+            body,
+            button,
+            input,
+            select,
+            textarea {
+                font-family: 'Vazir', sans-serif !important;
+            }
+        </style>
+    @endif
 
     @stack('style')
     <link rel="stylesheet"
